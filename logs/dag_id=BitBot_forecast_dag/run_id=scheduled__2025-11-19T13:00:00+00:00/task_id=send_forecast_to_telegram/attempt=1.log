@@ -1,0 +1,12 @@
+{"timestamp":"2025-11-19T13:47:25.969169Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2025-11-19T13:47:25.970156Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/forcast_bitbot_dag.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2025-11-19T13:47:26.793996Z","level":"warning","event":"The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/forcast_bitbot_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2025-11-19T13:47:26.815618Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2025-11-19T13:47:26.815801Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2025-11-19T13:47:26.815974Z","level":"info","event":"Current task name:send_forecast_to_telegram","logger":"task.stdout"}
+{"timestamp":"2025-11-19T13:47:26.816101Z","level":"info","event":"Dag name:BitBot_forecast_dag","logger":"task.stdout"}
+{"timestamp":"2025-11-19T13:47:26.972755Z","level":"error","event":"Keine Updates für den Bot gefunden. Schreibe zuerst an deinen Bot.","logger":"root","filename":"forcast_bitbot_dag.py","lineno":205,"error_detail":[{"exc_type":"ValueError","exc_value":"Keine Updates für den Bot gefunden. Schreibe zuerst an deinen Bot.","exc_notes":[],"syntax_error":null,"is_cause":false,"frames":[{"filename":"/opt/airflow/dags/forcast_bitbot_dag.py","lineno":197,"name":"send_forecast_to_telegram"},{"filename":"/opt/airflow/dags/forcast_bitbot_dag.py","lineno":28,"name":"get_chat_id"}],"is_group":false,"exceptions":[]}]}
+{"timestamp":"2025-11-19T13:47:26.974012Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.decorators.python._PythonDecoratedOperator","filename":"python.py","lineno":215}
+{"timestamp":"2025-11-19T13:47:26.989575Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2025-11-19T13:47:26.989724Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2025-11-19T13:47:26.989870Z","level":"info","event":"Task operator:<Task(_PythonDecoratedOperator): send_forecast_to_telegram>","logger":"task.stdout"}

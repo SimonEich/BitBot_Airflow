@@ -1,0 +1,15 @@
+{"timestamp":"2025-11-16T11:20:22.789418Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2025-11-16T11:20:22.789812Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/book_dag.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2025-11-16T11:20:22.809943Z","level":"warning","event":"The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/book_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2025-11-16T11:20:22.819657Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2025-11-16T11:20:22.819827Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2025-11-16T11:20:22.819914Z","level":"info","event":"Current task name:insert_data","logger":"task.stdout"}
+{"timestamp":"2025-11-16T11:20:22.819984Z","level":"info","event":"Dag name:postgres_setup_dag","logger":"task.stdout"}
+{"timestamp":"2025-11-16T11:20:22.820805Z","level":"info","event":">>> Inserting sample data...","logger":"task.stdout"}
+{"timestamp":"2025-11-16T11:20:22.891253Z","level":"warning","event":"empty cryptography key - values will not be stored encrypted.","logger":"airflow.models.crypto","filename":"crypto.py","lineno":82}
+{"timestamp":"2025-11-16T11:20:22.896967Z","level":"info","event":"Running statement: \n        INSERT INTO example_data (name, value)\n        VALUES \n            ('Alice', 10),\n            ('Bob', 20),\n            ('Charlie', 30);\n        , parameters: None","logger":"airflow.task.hooks.airflow.providers.postgres.hooks.postgres.PostgresHook","filename":"sql.py","lineno":810}
+{"timestamp":"2025-11-16T11:20:22.897980Z","level":"info","event":"Rows affected: 3","logger":"airflow.task.hooks.airflow.providers.postgres.hooks.postgres.PostgresHook","filename":"sql.py","lineno":822}
+{"timestamp":"2025-11-16T11:20:22.898684Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.decorators.python._PythonDecoratedOperator","filename":"python.py","lineno":215}
+{"timestamp":"2025-11-16T11:20:22.906374Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2025-11-16T11:20:22.906551Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2025-11-16T11:20:22.906646Z","level":"info","event":"Task operator:<Task(_PythonDecoratedOperator): insert_data>","logger":"task.stdout"}

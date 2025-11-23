@@ -1,0 +1,16 @@
+{"timestamp":"2025-11-17T21:36:14.498247Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2025-11-17T21:36:14.498746Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/forcast_bitbot_dag.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2025-11-17T21:36:15.009379Z","level":"warning","event":"The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/forcast_bitbot_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2025-11-17T21:36:15.026493Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2025-11-17T21:36:15.026732Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2025-11-17T21:36:15.026860Z","level":"info","event":"Current task name:store_forecast","logger":"task.stdout"}
+{"timestamp":"2025-11-17T21:36:15.026967Z","level":"info","event":"Dag name:bitcoin_hourly_forecast_v2","logger":"task.stdout"}
+{"timestamp":"2025-11-17T21:36:15.088983Z","level":"warning","event":"empty cryptography key - values will not be stored encrypted.","logger":"airflow.models.crypto","filename":"crypto.py","lineno":82}
+{"timestamp":"2025-11-17T21:36:15.089760Z","level":"warning","event":"This setter is for backward compatibility and should not be used.\nSince the introduction of connection property, the providers listed below breaks due to assigning value to self.connection in their __init__ method.\n* apache-airflow-providers-mysql<5.7.1\n* apache-airflow-providers-elasticsearch<5.5.1\n* apache-airflow-providers-postgres<5.13.0","logger":"airflow.task.hooks.airflow.providers.postgres.hooks.postgres.PostgresHook","filename":"sql.py","lineno":249}
+{"timestamp":"2025-11-17T21:36:15.095466Z","level":"info","event":"Running statement: INSERT INTO bitcoin_forecast (predicted_value) VALUES (%s);, parameters: (91575.73076923077,)","logger":"airflow.task.hooks.airflow.providers.postgres.hooks.postgres.PostgresHook","filename":"sql.py","lineno":810}
+{"timestamp":"2025-11-17T21:36:15.097195Z","level":"info","event":"Rows affected: 1","logger":"airflow.task.hooks.airflow.providers.postgres.hooks.postgres.PostgresHook","filename":"sql.py","lineno":822}
+{"timestamp":"2025-11-17T21:36:15.097681Z","level":"info","event":"Forecast in bitcoin_forecast gespeichert.","logger":"root","filename":"forcast_bitbot_dag.py","lineno":138}
+{"timestamp":"2025-11-17T21:36:15.097999Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.decorators.python._PythonDecoratedOperator","filename":"python.py","lineno":215}
+{"timestamp":"2025-11-17T21:36:15.106194Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2025-11-17T21:36:15.106325Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2025-11-17T21:36:15.106445Z","level":"info","event":"Task operator:<Task(_PythonDecoratedOperator): store_forecast>","logger":"task.stdout"}

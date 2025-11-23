@@ -1,0 +1,12 @@
+{"timestamp":"2025-11-18T21:37:36.867045Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2025-11-18T21:37:36.867388Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/forcast_bitbot_dag.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2025-11-18T21:37:37.312569Z","level":"warning","event":"The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/forcast_bitbot_dag.py","lineno":2,"logger":"py.warnings"}
+{"timestamp":"2025-11-18T21:37:37.324079Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2025-11-18T21:37:37.324208Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2025-11-18T21:37:37.324306Z","level":"info","event":"Current task name:send_forecast_to_telegram","logger":"task.stdout"}
+{"timestamp":"2025-11-18T21:37:37.324376Z","level":"info","event":"Dag name:BitBot_forecast_dag","logger":"task.stdout"}
+{"timestamp":"2025-11-18T21:37:37.669873Z","level":"info","event":"Telegram message sent.","logger":"root","filename":"forcast_bitbot_dag.py","lineno":40}
+{"timestamp":"2025-11-18T21:37:37.671236Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.decorators.python._PythonDecoratedOperator","filename":"python.py","lineno":215}
+{"timestamp":"2025-11-18T21:37:37.685851Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2025-11-18T21:37:37.686302Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2025-11-18T21:37:37.686837Z","level":"info","event":"Task operator:<Task(_PythonDecoratedOperator): send_forecast_to_telegram>","logger":"task.stdout"}
