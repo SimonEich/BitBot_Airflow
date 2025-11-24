@@ -1,96 +1,111 @@
-BitBot_airflow Dokumentation
+# BitBot Airflow – Projektdokumentation
 
-FHNW - Simon Eich
+## FHNW – Simon Eich
 
-Problemstellung
+## Problemstellung
+Es existieren verschiedene Modelle zur Vorhersage von Kursverläufen. Um diese Modelle testen zu können, werden möglichst aktuelle und historische Daten benötigt. Das manuelle Sammeln dieser Daten ist jedoch aufwendig und fehleranfällig.  
+Eine geeignete Möglichkeit zur Automatisierung dieses Prozesses ist der Einsatz von Apache Airflow.
 
-Es gibt verschiedene Modele mit welchen man Kursverläufe vorherzusagen kann. Ich möchte möglichst aktuelle Daten sammeln um die Möglichkeit zu haben verschiedene Modelle zu testen. Es ist sehr aufwendig und Fehleranfällig das Sammeln der Daten von Hand zu machen. Eine gute möglichkeit den Prozess zu automatisiern ist 
-die Verwendung von Airflow. 
+Da der Prozess nicht konstant überwacht werden soll, jedoch bei auftretenden Fehlern sofort reagiert werden muss, wird zusätzlich ein Benachrichtigungssystem benötigt.
 
-Da ich den Prozess nicht überwachen möchte, aber möglichst schnell bei einem Problem eingreifen um keine Daten zu verpassen, muss eine Benachrichtigungsfunktion integriert werden. 
+---
 
+## Zielarchitektur (Soll-Zustand)
+Die Lösung soll automatisch in regelmäßigen Intervallen den Bitcoin-Preis erfassen, in einer Datenbank speichern und bei Fehlern unmittelbar über Telegram informieren.
 
+### Systemkomponenten
+### Apache Airflow
+- Orchestriert den gesamten Prozess  
+- Führt Tasks sequenziell und planbar aus  
+- Bietet Logging und Monitoring  
 
-Zielarchitektur (Soll-Zustand)
+### CoinGecko API
+- Liefert aktuelle Bitcoin-Preise im 5-Minuten-Intervall  
+- Stellt historische Werte bereit  
 
-Die gewünschte Lösung soll den Bitcoin-Preis automatisch in regelmäßigen Intervallen erfassen, in einer Datenbank speichern und bei Fehlern sofort eine Telegram-Benachrichtigung senden.
+### PostgreSQL
+- Speicherung der Preisdaten  
+- Basis für Analysen oder Reporting  
 
-Das System besteht aus folgenden Komponenten:
+### Telegram Bot
+- Versendet Fehlermeldungen  
+- Ermöglicht schnelle Reaktion auf Probleme  
 
-Apache Airflow
-Orchestriert den gesamten Prozess
-Führt Tasks sequentiell und planbar aus
-Stellt automatisches Logging und Monitoring bereit
+---
 
-CoinGecko API
-Liefert aktuelle Bitcoin-Preise im 5-Minuten-Intervall
-Vergange Werte um Modele zu trainieren
+## Ablaufdiagramm
 
-PostgreSQL Datenbank
-Speichert die Preisdaten
-Ermöglicht spätere Analysen oder Reporting
-
-Telegram Bot
-Sendet Benachrichtigungen bei Fehlern
-Ermöglicht unmittelbare Kontrolle der Pipeline
-
-
-Ablaufdiagramm
-
-create_table() >> backfill_last_12_hours() >> insert_data(get_bitcoin_price())
+create_table() >> backfill_last_12_hours() >> get_bitcoin_price() >> insert_data()
 
 
+---
 
-Technologie-Entscheidung(en)
+## Technologie-Entscheidungen
 
-Warum Apache Airflow?
-Airflow eignet sich hervorragend für ETL-Prozesse, API-Abfragen und datengetriebene Workflows. Relevante Vorteile:
-Wiederholbare und planbare Ausführung (Cron-ähnliche Zeitsteuerung)
-Native Verbindung zu PostgreSQL über PostgresHook
-Einfache Skalierbarkeit
-Für diese Anwendung ist Airflow wesentlich geeigneter als Apache Beam, da die Aufgabe nicht datenstrom-basiert, sondern zeitgesteuert und orchestriert ist.
+### Warum Apache Airflow?
+Airflow eignet sich besonders für ETL-Prozesse, API-Abfragen und orchestrierte Workflows.  
+Vorteile:
+- Wiederholbare, planbare Ausführung  
+- Native PostgreSQL-Anbindung (PostgresHook)  
+- Skalierbarkeit  
+Für diese Anwendung ist Airflow geeigneter als Apache Beam, da keine Datenströme, sondern zeitgesteuerte Abläufe benötigt werden.
 
-Warum Docker Compose?
-Das Airflow-Setup wurde bewusst mit Docker Compose realisiert. Gründe:
-Einfache Erweiterbarkeit (z. B. weitere Services, Worker)
-Industrie-Standard für lokale und produktionsnahe Umgebungen
+### Warum Docker Compose?
+- Einfach erweiterbar (zusätzliche Services oder Worker)  
+- Industriestandard für lokale und produktionsnahe Umgebungen  
 
-Warum PostgreSQL?
-stabile, relationale Datenbank
-Airflow bringt fertige Hooks und Operatoren mit
-leicht weiterverwendbar für Dashboards oder Analysen
+### Warum PostgreSQL?
+- Stabile, relationale Datenbank  
+- Airflow liefert fertige Hooks/Operatoren  
+- Gut geeignet für spätere Auswertungen  
 
-Warum Telegram als Benachrichtigungssystem?
-einfache Bot-Anbindung
-kostenlos und zuverlässig
-ermöglicht Monitoring von unterwegs
+### Warum Telegram?
+- Leicht integrierbar  
+- Kostenlos und zuverlässig  
+- Ideal für mobile Benachrichtigungen  
+
+---
+
+## Umsetzung
+
+Der Airflow-DAG umfasst vier Haupttasks:
+
+### 1. create_table()
+- Erstellt die Tabelle `bitcoin_data`, falls sie noch nicht existiert  
+- Ermöglicht einen idempotenten Start auf leeren Systemen  
+
+### 2. backfill_last_12_hours()
+- Füllt die letzten zwölf Stunden an Preisdaten nach  
+
+### 3. get_bitcoin_price()
+- Ruft den aktuellen Bitcoin-Preis über die CoinGecko-API ab  
+
+### 4. insert_data(price)
+- Speichert den Preis in der PostgreSQL-Datenbank  
+
+### Telegram-Error-Handling
+- Jeder Task ist in einen try/except-Block eingebettet  
+- Bei Fehlern wird automatisch eine Telegram-Nachricht versendet  
+
+Dies macht Probleme sofort sichtbar, etwa wenn:
+- die API nicht erreichbar ist  
+- die Datenbank nicht reagiert  
+- Airflow fehlschlägt  
+
+---
+
+## Quickstart
+
+### Projekt starten
+1. Repository klonen  
+2. Mit folgendem Befehl starten:  
+
+    'docker compose up'
 
 
-Umsetzung
-
-Der umgesetzte Airflow-DAG besteht aus vier Haupttasks:
-
-(1) create_table()
-
-Erstellt (falls noch nicht vorhanden) die Tabelle bitcoin_data.
-Dies stellt sicher, dass der DAG auf leeren Systemen ohne Setup funktioniert („idempotent“).
-
-(2) backfill_last_12_hour()
-Füllt die Datenbank mit Daten der letzten zwölf Stunden.
-
-
-(3) get_bitcoin_price()
-Fragt den aktuellen Bitcoin-Preis über die CoinGecko-API ab und gibt ihn an die folgenden Tasks weiter.
-
-(4) insert_data(price)
-Speichert den Preis in der PostgreSQL-Datenbank.
-
-Telegram-Error-Handling
-Jeder Task ist in einen try/except-Block gekapselt.
-Bei Fehlern wird automatisch eine Telegram-Nachricht verschickt.
-
-Dadurch wird sofort sichtbar, wenn:
-die API nicht erreichbar ist
-die Datenbank nicht arbeitet
-Airflow ein Problem hat
+### Airflow aufrufen  
+- URL: http://localhost:8080/  
+- Login:
+- Benutzer: `airflow`  
+- Passwort: `airflow`  
 
