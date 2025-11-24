@@ -1,47 +1,96 @@
-Overview
-========
+BitBot_airflow Dokumentation
 
-Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
+FHNW - Simon Eich
 
-Project Contents
-================
+Problemstellung
 
-Your Astro project contains the following files and folders:
+Es gibt verschiedene Modele mit welchen man Kursverläufe vorherzusagen kann. Ich möchte möglichst aktuelle Daten sammeln um die Möglichkeit zu haben verschiedene Modelle zu testen. Es ist sehr aufwendig und Fehleranfällig das Sammeln der Daten von Hand zu machen. Eine gute möglichkeit den Prozess zu automatisiern ist 
+die Verwendung von Airflow. 
 
-- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes one example DAG:
-    - `example_astronauts`: This DAG shows a simple ETL pipeline example that queries the list of astronauts currently in space from the Open Notify API and prints a statement for each astronaut. The DAG uses the TaskFlow API to define tasks in Python, and dynamic task mapping to dynamically print a statement for each astronaut. For more on how this DAG works, see our [Getting started tutorial](https://www.astronomer.io/docs/learn/get-started-with-airflow).
-- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
-- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
-- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
-- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
-- plugins: Add custom or community plugins for your project to this file. It is empty by default.
-- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
+Da ich den Prozess nicht überwachen möchte, aber möglichst schnell bei einem Problem eingreifen um keine Daten zu verpassen, muss eine Benachrichtigungsfunktion integriert werden. 
 
-Deploy Your Project Locally
-===========================
 
-Start Airflow on your local machine by running 'astro dev start'.
 
-This command will spin up five Docker containers on your machine, each for a different Airflow component:
+Zielarchitektur (Soll-Zustand)
 
-- Postgres: Airflow's Metadata Database
-- Scheduler: The Airflow component responsible for monitoring and triggering tasks
-- DAG Processor: The Airflow component responsible for parsing DAGs
-- API Server: The Airflow component responsible for serving the Airflow UI and API
-- Triggerer: The Airflow component responsible for triggering deferred tasks
+Die gewünschte Lösung soll den Bitcoin-Preis automatisch in regelmäßigen Intervallen erfassen, in einer Datenbank speichern und bei Fehlern sofort eine Telegram-Benachrichtigung senden.
 
-When all five containers are ready the command will open the browser to the Airflow UI at http://localhost:8080/. You should also be able to access your Postgres Database at 'localhost:5432/postgres' with username 'postgres' and password 'postgres'.
+Das System besteht aus folgenden Komponenten:
 
-Note: If you already have either of the above ports allocated, you can either [stop your existing Docker containers or change the port](https://www.astronomer.io/docs/astro/cli/troubleshoot-locally#ports-are-not-available-for-my-local-airflow-webserver).
+Apache Airflow
+Orchestriert den gesamten Prozess
+Führt Tasks sequentiell und planbar aus
+Stellt automatisches Logging und Monitoring bereit
 
-Deploy Your Project to Astronomer
-=================================
+CoinGecko API
+Liefert aktuelle Bitcoin-Preise im 5-Minuten-Intervall
+Vergange Werte um Modele zu trainieren
 
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://www.astronomer.io/docs/astro/deploy-code/
+PostgreSQL Datenbank
+Speichert die Preisdaten
+Ermöglicht spätere Analysen oder Reporting
 
-Contact
-=======
+Telegram Bot
+Sendet Benachrichtigungen bei Fehlern
+Ermöglicht unmittelbare Kontrolle der Pipeline
 
-The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
-# BitBot_Airflow
-# BitBot_Airflow
+
+Ablaufdiagramm
+
+create_table() >> backfill_last_12_hours() >> insert_data(get_bitcoin_price())
+
+
+
+Technologie-Entscheidung(en)
+
+Warum Apache Airflow?
+Airflow eignet sich hervorragend für ETL-Prozesse, API-Abfragen und datengetriebene Workflows. Relevante Vorteile:
+Wiederholbare und planbare Ausführung (Cron-ähnliche Zeitsteuerung)
+Native Verbindung zu PostgreSQL über PostgresHook
+Einfache Skalierbarkeit
+Für diese Anwendung ist Airflow wesentlich geeigneter als Apache Beam, da die Aufgabe nicht datenstrom-basiert, sondern zeitgesteuert und orchestriert ist.
+
+Warum Docker Compose?
+Das Airflow-Setup wurde bewusst mit Docker Compose realisiert. Gründe:
+Einfache Erweiterbarkeit (z. B. weitere Services, Worker)
+Industrie-Standard für lokale und produktionsnahe Umgebungen
+
+Warum PostgreSQL?
+stabile, relationale Datenbank
+Airflow bringt fertige Hooks und Operatoren mit
+leicht weiterverwendbar für Dashboards oder Analysen
+
+Warum Telegram als Benachrichtigungssystem?
+einfache Bot-Anbindung
+kostenlos und zuverlässig
+ermöglicht Monitoring von unterwegs
+
+
+Umsetzung
+
+Der umgesetzte Airflow-DAG besteht aus vier Haupttasks:
+
+(1) create_table()
+
+Erstellt (falls noch nicht vorhanden) die Tabelle bitcoin_data.
+Dies stellt sicher, dass der DAG auf leeren Systemen ohne Setup funktioniert („idempotent“).
+
+(2) backfill_last_12_hour()
+Füllt die Datenbank mit Daten der letzten zwölf Stunden.
+
+
+(3) get_bitcoin_price()
+Fragt den aktuellen Bitcoin-Preis über die CoinGecko-API ab und gibt ihn an die folgenden Tasks weiter.
+
+(4) insert_data(price)
+Speichert den Preis in der PostgreSQL-Datenbank.
+
+Telegram-Error-Handling
+Jeder Task ist in einen try/except-Block gekapselt.
+Bei Fehlern wird automatisch eine Telegram-Nachricht verschickt.
+
+Dadurch wird sofort sichtbar, wenn:
+die API nicht erreichbar ist
+die Datenbank nicht arbeitet
+Airflow ein Problem hat
+
