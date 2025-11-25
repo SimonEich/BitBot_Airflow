@@ -109,6 +109,7 @@ docker compose up
 - Benutzer: `airflow`  
 - Passwort: `airflow`  
 
+---
 
 ### Next Steps
 
