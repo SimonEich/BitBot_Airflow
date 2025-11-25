@@ -6,10 +6,8 @@ import logging
 import requests
 import re
 
-# ---------------------------------------------------------
 # Telegram 
-# ---------------------------------------------------------
-TELEGRAM_BOT_TOKEN = "XXX"
+TELEGRAM_BOT_TOKEN = "8267838711:AAGMwD7BywobC79reVPxJ8Aypi1-ld1XWCk"
 
 def escape_markdown_v2(text: str) -> str:
     return re.sub(r'([_*\[\]()~`>#+\-=|{}.!])', r'\\\1', text)
@@ -37,9 +35,7 @@ def send_telegram_message(bot_token: str, chat_id: str, message: str):
     logging.info("Telegram message sent successfully.")
 
 
-# ---------------------------------------------------------
-# Haupt-DAG
-# ---------------------------------------------------------
+
 with DAG(
     dag_id="BitBot_dag",
     start_date=datetime(2024, 1, 1),
@@ -47,9 +43,7 @@ with DAG(
     catchup=False,
 ):
 
-    # ---------------------------
     # Task: Tabelle erzeugen
-    # ---------------------------
     @task
     def create_table():
         hook = PostgresHook(postgres_conn_id="postgres_default")
@@ -63,9 +57,7 @@ with DAG(
         hook.run(sql)
         logging.info("bitcoin_data table created.")
 
-    # -------------------------------------------------
     # Task: Backfill (12h, alle 5 min) beim Neustart
-    # -------------------------------------------------
     @task
     def backfill_last_12_hours():
         try:
@@ -85,9 +77,9 @@ with DAG(
 
             resp = requests.get(url, params=params, timeout=10)
             resp.raise_for_status()
-            price_data = resp.json()["prices"]  # [timestamp_ms, price]
+            price_data = resp.json()["prices"] 
 
-            # In 5-Minuten-Schritte sampeln
+            # 5-Minuten-Schritte sampeln
             now = datetime.utcnow()
             start = now - timedelta(hours=12)
 
@@ -131,9 +123,7 @@ with DAG(
             )
             raise
 
-    # ---------------------------
     # Task: Bitcoin-Preis holen
-    # ---------------------------
     @task
     def get_bitcoin_price():
         url = "https://api.coingecko.com/api/v3/simple/price"
@@ -146,9 +136,7 @@ with DAG(
         logging.info(f"Fetched BTC price: {price}")
         return price
 
-    # ---------------------------
     # Task: Preis in DB speichern
-    # ---------------------------
     @task
     def insert_data(price: float):
         hook = PostgresHook(postgres_conn_id="postgres_default")
@@ -157,7 +145,5 @@ with DAG(
         logging.info(f"Inserted BTC price {price}")
 
 
-    # ---------------------------
     # DAG Reihenfolge
-    # ---------------------------
     create_table() >> backfill_last_12_hours() >> insert_data(get_bitcoin_price())

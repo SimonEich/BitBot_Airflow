@@ -35,7 +35,7 @@ Die Lösung soll automatisch in regelmäßigen Intervallen den Bitcoin-Preis erf
 
 ## Ablaufdiagramm
 
-create_table() >> backfill_last_12_hours() >> get_bitcoin_price() >> insert_data()
+create_table() >> backfill_last_12_hours() >> insert_data(get_bitcoin_price())
 
 
 ---
@@ -109,3 +109,10 @@ docker compose up
 - Benutzer: `airflow`  
 - Passwort: `airflow`  
 
+
+### Next Steps
+
+Der Dag BitBot_forecast_dag ist ein Beispiel, wie eine 
+Forcast aussehen könnte. Für eine Veranschaulichung 
+verwende ich Sklint. Fehler und Kaufsignale werden
+per Telegram gesendet. 
