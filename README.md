@@ -115,4 +115,4 @@ docker compose up
 
 Der BitBot-DAG automatisiert die zuvor manuelle und fehleranfällige Erfassung von Bitcoin-Daten vollständig und erhöht dank Telegram-Benachrichtigungen die Reaktionsfähigkeit bei Problemen. Airflow sorgt für eine zuverlässige, nachvollziehbare Verarbeitung und schafft eine stabile Grundlage für weitere Analysen.
 
-Künftig kann das System um präzisere Forecast-Modelle, grafische Auswertungen oder zusätzliche Datenquellen erweitert werden. Auch eine Skalierung der Airflow-Umgebung oder ein Cloud-Deployment bieten sich als nächste Schritte an.
+Für die Zukunft bietet das System zahlreiche Erweiterungsmöglichkeiten. So kann der Forecast-DAG weiter ausgebaut und durch präzisere Modelle wie Auto-ARIMA oder Prophet ersetzt werden. Zusätzlich könnten Visualisierungen, Dashboards oder Alerts ergänzt werden, um Trends besser zu erkennen. Langfristig wäre auch eine Skalierung der Airflow-Umgebung oder eine Migration in die Cloud denkbar. Insgesamt dient das Projekt als solide Grundlage, um automatisierte Datenerfassung und Prognosepipelines weiter auszubauen und produktionsreif zu gestalten.
