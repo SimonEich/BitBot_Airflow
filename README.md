@@ -111,9 +111,8 @@ docker compose up
 
 ---
 
-### Next Steps
+### Fazit/Ausblick
 
-Der Dag BitBot_forecast_dag ist ein Beispiel, wie eine 
-Forcast aussehen könnte. Für eine Veranschaulichung 
-verwende ich Sklint. Fehler und Kaufsignale werden
-per Telegram gesendet. 
+Der BitBot-DAG automatisiert die zuvor manuelle und fehleranfällige Erfassung von Bitcoin-Daten vollständig und erhöht dank Telegram-Benachrichtigungen die Reaktionsfähigkeit bei Problemen. Airflow sorgt für eine zuverlässige, nachvollziehbare Verarbeitung und schafft eine stabile Grundlage für weitere Analysen.
+
+Künftig kann das System um präzisere Forecast-Modelle, grafische Auswertungen oder zusätzliche Datenquellen erweitert werden. Auch eine Skalierung der Airflow-Umgebung oder ein Cloud-Deployment bieten sich als nächste Schritte an.
