@@ -35,6 +35,8 @@ Die Lösung soll automatisch in regelmäßigen Intervallen den Bitcoin-Preis erf
 
 ## Ablaufdiagramm
 
+![Alt text](img/image.png)
+
 create_table() >> backfill_last_12_hours() >> insert_data(get_bitcoin_price())
 
 

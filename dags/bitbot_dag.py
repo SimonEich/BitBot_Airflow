@@ -46,16 +46,23 @@ with DAG(
     # Task: Tabelle erzeugen
     @task
     def create_table():
-        hook = PostgresHook(postgres_conn_id="postgres_default")
-        sql = """
-        CREATE TABLE IF NOT EXISTS bitcoin_data (
-            id SERIAL PRIMARY KEY,
-            time TIMESTAMP WITH TIME ZONE NOT NULL,
-            value FLOAT NOT NULL
-        );
-        """
-        hook.run(sql)
-        logging.info("bitcoin_data table created.")
+        try:
+            hook = PostgresHook(postgres_conn_id="postgres_default")
+            sql = """
+            CREATE TABLE IF NOT EXISTS bitcoin_data (
+                id SERIAL PRIMARY KEY,
+                time TIMESTAMP WITH TIME ZONE NOT NULL,
+                value FLOAT NOT NULL
+            );
+            """
+            hook.run(sql)
+            logging.info("bitcoin_data table created.")
+        except Exception as e:
+            chat_id = get_chat_id(TELEGRAM_BOT_TOKEN)
+            send_telegram_message(
+                TELEGRAM_BOT_TOKEN, chat_id, f"ERROR in create_table:\n{e}"
+            )
+            raise
 
     # Task: Backfill (12h, alle 5 min) beim Neustart
     @task
@@ -119,31 +126,44 @@ with DAG(
         except Exception as e:
             chat_id = get_chat_id(TELEGRAM_BOT_TOKEN)
             send_telegram_message(
-                TELEGRAM_BOT_TOKEN, chat_id, f"❌ ERROR in backfill:\n{e}"
+                TELEGRAM_BOT_TOKEN, chat_id, f"ERROR in backfill:\n{e}"
             )
             raise
 
     # Task: Bitcoin-Preis holen
     @task
     def get_bitcoin_price():
-        url = "https://api.coingecko.com/api/v3/simple/price"
-        params = {"ids": "bitcoin", "vs_currencies": "usd"}
+        try:    
+            url = "https://api.coingecko.com/api/v3/simple/price"
+            params = {"ids": "bitcoin", "vs_currencies": "usd"}
 
-        resp = requests.get(url, params=params, timeout=10)
-        resp.raise_for_status()
-        price = resp.json()["bitcoin"]["usd"]
+            resp = requests.get(url, params=params, timeout=10)
+            resp.raise_for_status()
+            price = resp.json()["bitcoin"]["usd"]
 
-        logging.info(f"Fetched BTC price: {price}")
-        return price
+            logging.info(f"Fetched BTC price: {price}")
+            return price
+        except Exception as e:
+            chat_id = get_chat_id(TELEGRAM_BOT_TOKEN)
+            send_telegram_message(
+                TELEGRAM_BOT_TOKEN, chat_id, f"ERROR in get_bitcoin_price:\n{e}"
+            )
+            raise
 
     # Task: Preis in DB speichern
     @task
     def insert_data(price: float):
-        hook = PostgresHook(postgres_conn_id="postgres_default")
-        sql = "INSERT INTO bitcoin_data (time, value) VALUES (NOW(), %s);"
-        hook.run(sql, parameters=(price,))
-        logging.info(f"Inserted BTC price {price}")
-
-
+        try:
+            hook = PostgresHook(postgres_conn_id="postgres_default")
+            sql = "INSERT INTO bitcoin_data (time, value) VALUES (NOW(), %s);"
+            hook.run(sql, parameters=(price,))
+            logging.info(f"Inserted BTC price {price}")
+        except Exception as e:
+            chat_id = get_chat_id(TELEGRAM_BOT_TOKEN)
+            send_telegram_message(
+                TELEGRAM_BOT_TOKEN, chat_id, f"ERROR in insert_data:\n{e}"
+            )
+            raise
+        
     # DAG Reihenfolge
     create_table() >> backfill_last_12_hours() >> insert_data(get_bitcoin_price())
