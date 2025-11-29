@@ -11,7 +11,7 @@ Da der Prozess nicht konstant überwacht werden soll, jedoch bei auftretenden Fe
 ---
 
 ## Zielarchitektur (Soll-Zustand)
-Die Lösung soll automatisch in regelmäßigen Intervallen den Bitcoin-Preis erfassen, in einer Datenbank speichern und bei Fehlern unmittelbar über Telegram informieren.
+Die Lösung soll automatisch in regelmäßigen Intervallen einen Wert, wie den Bitcoin-Preis erfassen, in einer Datenbank speichern und bei Fehlern unmittelbar über Telegram informieren.
 
 ### Systemkomponenten
 ### Apache Airflow
@@ -118,3 +118,5 @@ docker compose up
 Der BitBot-DAG automatisiert die zuvor manuelle und fehleranfällige Erfassung von Bitcoin-Daten vollständig und erhöht dank Telegram-Benachrichtigungen die Reaktionsfähigkeit bei Problemen. Airflow sorgt für eine zuverlässige, nachvollziehbare Verarbeitung und schafft eine stabile Grundlage für weitere Analysen.
 
 Für die Zukunft bietet das System zahlreiche Erweiterungsmöglichkeiten. So kann der Forecast-DAG weiter ausgebaut und durch präzisere Modelle wie Auto-ARIMA oder Prophet ersetzt werden. Zusätzlich könnten Visualisierungen, Dashboards oder Alerts ergänzt werden, um Trends besser zu erkennen. Langfristig wäre auch eine Skalierung der Airflow-Umgebung oder eine Migration in die Cloud denkbar. Insgesamt dient das Projekt als solide Grundlage, um automatisierte Datenerfassung und Prognosepipelines weiter auszubauen und produktionsreif zu gestalten.
+
+![Alt text](img/img_futur.png)
