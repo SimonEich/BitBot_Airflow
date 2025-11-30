@@ -103,7 +103,7 @@ Dies macht Probleme sofort sichtbar, etwa wenn:
 1. Repository klonen  
 2. Mit folgendem Befehl starten:  
 
-docker compose up
+`docker compose up`
 
 
 ### Airflow aufrufen  

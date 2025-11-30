@@ -4,3 +4,4 @@ numpy==1.26.4
 scikit-learn==1.5.2
 python-telegram-bot==20.7
 sqlite-utils==3.36
+python-dotenv

@@ -5,9 +5,12 @@ from datetime import datetime, timedelta
 import logging
 import requests
 import re
+import os
+from dotenv import load_dotenv
 
 # Telegram 
-TELEGRAM_BOT_TOKEN = "8267838711:AAGMwD7BywobC79reVPxJ8Aypi1-ld1XWCk"
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 def escape_markdown_v2(text: str) -> str:
     return re.sub(r'([_*\[\]()~`>#+\-=|{}.!])', r'\\\1', text)

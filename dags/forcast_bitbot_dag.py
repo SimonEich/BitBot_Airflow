@@ -8,12 +8,12 @@ import re
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
+import os
+from dotenv import load_dotenv
 
-
-# ---------------------------
-# Konfiguration
-# ---------------------------
-TELEGRAM_BOT_TOKEN = "8267838711:AAGMwD7BywobC79reVPxJ8Aypi1-ld1XWCk"
+# Telegram 
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 def escape_markdown_v2(text: str) -> str:
     return re.sub(r'([_*\[\]()~`>#+\-=|{}.!])', r'\\\1', text)
