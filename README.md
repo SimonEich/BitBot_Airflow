@@ -14,7 +14,7 @@ Da der Prozess nicht konstant überwacht werden soll, jedoch bei auftretenden Fe
 Die Lösung soll automatisch in regelmäßigen Intervallen einen Wert, wie den Bitcoin-Preis erfassen, in einer Datenbank speichern und bei Fehlern unmittelbar über Telegram informieren.
 
 ### Systemkomponenten
-### Apache Airflow
+### Apache Airflow (3.1.2)
 - Orchestriert den gesamten Prozess  
 - Führt Tasks sequenziell und planbar aus  
 - Bietet Logging und Monitoring  
@@ -59,12 +59,13 @@ Für diese Anwendung ist Airflow geeigneter als Apache Beam, da keine Datenströ
 ### Warum PostgreSQL?
 - Stabile, relationale Datenbank  
 - Airflow liefert fertige Hooks/Operatoren  
-- Gut geeignet für spätere Auswertungen  
+- Gut geeignet für spätere Auswertungen
+- Ideal für Zeitreihendaten  
 
 ### Warum Telegram?
 - Leicht integrierbar  
 - Kostenlos und zuverlässig  
-- Ideal für mobile Benachrichtigungen  
+- Ideal für mobile Benachrichtigungen (Plattformunabhängig)  
 
 ---
 
