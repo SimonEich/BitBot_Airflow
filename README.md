@@ -100,11 +100,18 @@ Dies macht Probleme sofort sichtbar, etwa wenn:
 ## Quickstart
 
 ### Projekt starten
-1. Repository klonen  
-2. Mit folgendem Befehl starten:  
+1. Repository klonen
 
-`docker compose up`
-
+2. Für die Telegram-Integration muss eine `.env`-Datei angelegt werden.  
+   Darin wird der Token des Telegram-Bots eingetragen.  
+   Den Token erhält man wie folgt:
+   - In Telegram den Nutzer **@BotFather** suchen
+   - Den Befehl `/newbot` senden
+   - Einen Namen und einen Benutzernamen für den Bot vergeben
+   - Anschließend stellt BotFather den **API-Token** bereit  
+   
+   Dieser Token wird in der `.env` wie folgt eingetragen:
+   `TELEGRAM_BOT_TOKEN=<dein_token>`
 
 ### Airflow aufrufen  
 - URL: http://localhost:8080/  
